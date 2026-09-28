@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admiralty Brass Co. | Handcrafted brass décor</title>
+<meta name="description" content="Handcrafted brass décor and handicrafts, made by artisans in Moradabad, India and shipped from Ontario, Canada.">
+<meta property="og:title" content="Admiralty Brass Co.">
+<meta property="og:description" content="Handcrafted brass décor and handicrafts, shipped from Ontario, Canada.">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%238a5f1c%22/%3E%3Ctext x=%2250%22 y=%2266%22 font-size=%2248%22 font-family=%22Arial,sans-serif%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22%3EAB%3C/text%3E%3C/svg%3E">
+<style>
+[hidden]{display:none!important}
+:root{
+  --paper:#fbfbfd; --fog:#f5f5f7; --line:#d2d2d7; --ink:#1d1d1f; --slate:#6e6e73;
+  --brass:#8a5f1c; --on-brass:#fff; --brass-soft:#b98a3e;
+  --radius:24px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#000; --fog:#161618; --line:#38383b; --ink:#f5f5f7; --slate:#a1a1a6; --brass:#d6b36c; --on-brass:#1d1608; --brass-soft:#d6b36c;}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.47;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
+body:has(dialog[open]){overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;z-index:999}
+.skip:focus{left:8px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;height:52px;background:color-mix(in srgb,var(--paper) 78%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.nav .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.brand .mark{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:var(--brass);color:var(--on-brass);font-size:10px;font-weight:700;letter-spacing:0}
+.links{display:flex;align-items:center;gap:26px;font-size:13px}
+.links a{text-decoration:none;color:var(--slate);transition:color .2s}
+.links a:hover,.links a[aria-current]{color:var(--ink)}
+.cartbtn{position:relative;background:none;border:0;cursor:pointer;padding:6px;display:flex;color:var(--slate)}
+.cartbtn:hover{color:var(--ink)}
+.cartbtn svg{width:19px;height:19px}
+.cartbtn .n{position:absolute;top:-2px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--brass);color:var(--on-brass);font-size:10px;font-weight:600;display:none;align-items:center;justify-content:center}
+.cartbtn .n.on{display:flex}
+@media(max-width:640px){.links .opt{display:none}.links{gap:18px}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:980px;padding:11px 22px;font-size:15px;font-weight:500;letter-spacing:-.01em;text-decoration:none;cursor:pointer;background:var(--brass);color:var(--on-brass);transition:filter .2s,transform .1s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:scale(.98)}
+.btn.sm{padding:8px 16px;font-size:14px}
+.btn.block{width:100%}
+.btn.ghost{background:transparent;color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.btn[disabled]{opacity:.55;cursor:default}
+.link{color:var(--brass);text-decoration:none;font-size:17px;background:none;border:0;cursor:pointer;padding:0}
+.link:hover{text-decoration:underline}
+.link.sm{font-size:15px}
+.link::after{content:" \203A"}
+.actions{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
+
+/* type */
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.03em;line-height:1.08}
+.lede,h1,h2{text-wrap:balance}
+h1{font-size:clamp(40px,7vw,72px);letter-spacing:-.04em}
+h2{font-size:clamp(32px,4.6vw,52px)}
+h3{font-size:24px;letter-spacing:-.02em;line-height:1.16}
+.lede{font-size:clamp(19px,2.2vw,24px);line-height:1.3;color:var(--slate);letter-spacing:-.015em;margin:0}
+.center{text-align:center}
+section{padding:96px 0}
+.fog{background:var(--fog)}
+.head{max-width:720px;margin:0 auto 48px;text-align:center}
+.head .lede{margin-top:14px}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;color:var(--slate)}
+.field input,.field select,.field textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;transition:border-color .15s,box-shadow .15s}
+.field textarea{min-height:130px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 3px color-mix(in srgb,var(--brass) 25%,transparent)}
+.field [aria-invalid="true"]{border-color:#d70015}
+.err{color:#d70015;font-size:13px;min-height:0}
+@media(prefers-color-scheme:dark){.err{color:#ff6961}}
+.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.two{grid-template-columns:1fr}}
+.note{font-size:14px;color:var(--slate)}
+.status{border-radius:14px;padding:14px 16px;font-size:15px;background:var(--fog)}
+.status.bad{background:color-mix(in srgb,#d70015 12%,var(--paper));color:var(--ink)}
+
+/* footer */
+footer{background:var(--fog);padding:56px 0 40px;font-size:13px;color:var(--slate)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;padding-bottom:32px;border-bottom:1px solid var(--line)}
+footer h4{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.005em}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+footer a{text-decoration:none;color:var(--slate)}
+footer a:hover{color:var(--ink);text-decoration:underline}
+.fine{padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* hero */
+.hero{padding:80px 0 0;text-align:center}
+.hero .lede{max-width:640px;margin:20px auto 30px}
+.lineup{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:16px;align-items:end;margin-top:64px}
+.lineup img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius)}
+.lineup img:nth-child(2){aspect-ratio:3/4.3}
+@media(max-width:720px){.lineup{grid-template-columns:1fr;max-width:340px;margin-left:auto;margin-right:auto}.lineup img:not(:nth-child(2)){display:none}}
+
+/* flagship */
+.flagship{padding:96px 0 0}
+.flag{display:grid;grid-template-columns:1.05fr 1fr;background:#111113;color:#f5f5f7;border-radius:32px;overflow:hidden}
+.flag .txt{padding:64px 56px;display:flex;flex-direction:column;justify-content:center;gap:18px;align-items:flex-start}
+.flag h2{font-size:clamp(40px,5.4vw,64px)}
+.flag p{margin:0;color:#a1a1a6;font-size:21px;line-height:1.3;letter-spacing:-.015em}
+.flag .price{color:#f5f5f7;font-size:17px}
+.flag .btn{background:#d6b36c;color:#1d1608}
+.flag .link{color:#d6b36c}
+.flag img{width:100%;height:100%;min-height:440px;object-fit:cover}
+@media(max-width:800px){.flag{grid-template-columns:1fr}.flag .txt{padding:40px 28px}.flag img{min-height:0;aspect-ratio:3/4;order:-1}}
+
+/* collection */
+.filters{display:flex;justify-content:center;margin-bottom:40px}
+.seg{display:inline-flex;background:var(--fog);border-radius:980px;padding:4px;gap:2px;flex-wrap:wrap;justify-content:center}
+.seg button{border:0;background:transparent;border-radius:980px;padding:8px 18px;font-size:14px;cursor:pointer;color:var(--slate)}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.14);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px}
+.tile{background:var(--fog);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;text-align:center}
+.tile .pic{display:block;padding:0;border:0;background:none;cursor:pointer;width:100%}
+.tile .pic img{width:100%;aspect-ratio:4/4.6;object-fit:cover;transition:transform .5s ease}
+.tile .pic:hover img{transform:scale(1.03)}
+.tile .pic{overflow:hidden}
+.tile .body{padding:26px 24px 30px;display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.kind{margin:0;font-size:13px;color:var(--slate)}
+.tag{margin:0;color:var(--slate);font-size:16px;max-width:26ch}
+.price{margin:10px 0 0;font-size:17px;font-weight:500}
+.tile .row{display:flex;gap:18px;align-items:center;margin-top:12px}
+
+/* craft */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:48px}
+.cols h3{margin-bottom:10px}
+.cols p{margin:0;color:var(--slate)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;counter-reset:s}
+.step{background:var(--fog);border-radius:var(--radius);padding:32px 28px}
+.step::before{counter-increment:s;content:counter(s);display:flex;width:34px;height:34px;border-radius:50%;background:var(--brass);color:var(--on-brass);font-weight:600;font-size:15px;align-items:center;justify-content:center;margin-bottom:22px}
+.step h3{font-size:22px;margin-bottom:8px}
+.step p{margin:0;color:var(--slate);font-size:16px}
+.origin{text-align:center;padding:72px 0}
+.origin h2{font-size:clamp(28px,4vw,44px);max-width:760px;margin:0 auto}
+.origin .lede{margin-top:14px}
+
+/* dialogs */
+dialog{border:0;padding:0;color:var(--ink);background:var(--paper)}
+dialog::backdrop{background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#qv{width:min(940px,calc(100% - 24px));max-height:calc(100% - 24px);border-radius:28px;overflow:auto;margin:auto}
+#qv[open]{animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.x{position:absolute;top:14px;right:14px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:color-mix(in srgb,var(--ink) 10%,var(--paper));cursor:pointer;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center}
+.x:hover{background:color-mix(in srgb,var(--ink) 18%,var(--paper))}
+.qvg{display:grid;grid-template-columns:1fr 1fr}
+.qvg img{width:100%;height:100%;object-fit:cover;min-height:420px;background:var(--fog)}
+.qvb{padding:44px 40px;display:flex;flex-direction:column;gap:10px}
+.qvb h2{font-size:38px}
+.qvb .tag{max-width:none;font-size:18px}
+.qvb ul{margin:8px 0 0;padding-left:18px;color:var(--slate);font-size:15px;display:grid;gap:6px}
+.qvb .price{font-size:22px;margin:14px 0 0}
+details.spec{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0 6px;padding:12px 0}
+details.spec summary{cursor:pointer;font-size:15px;font-weight:500;list-style:none;display:flex;justify-content:space-between}
+details.spec summary::after{content:"+";color:var(--slate)}
+details.spec[open] summary::after{content:"\2212"}
+details.spec summary::-webkit-details-marker{display:none}
+dl{margin:12px 0 0;display:grid;gap:8px;font-size:14px}
+dl div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+dt{color:var(--slate)}dd{margin:0}
+.buy{display:flex;gap:12px;align-items:center;margin-top:8px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:980px}
+.qty button{width:38px;height:40px;border:0;background:none;cursor:pointer;font-size:18px;color:var(--ink)}
+.qty span{min-width:22px;text-align:center;font-size:15px}
+.buy .btn{flex:1}
+@media(max-width:760px){.qvg{grid-template-columns:1fr}.qvg img{min-height:0;aspect-ratio:4/4}.qvb{padding:28px 24px 30px}}
+
+#drawer{position:fixed;inset:0 0 0 auto;margin:0;width:min(460px,100%);height:100%;max-height:100%;border-radius:0;display:none;flex-direction:column}
+#drawer[open]{display:flex;animation:slide .26s ease}
+@keyframes slide{from{transform:translateX(28px);opacity:0}to{transform:none;opacity:1}}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+.dh h3{font-size:20px}
+.dh .x{position:static}
+.db{flex:1;overflow:auto;padding:24px}
+.df{padding:20px 24px 26px;border-top:1px solid var(--line);display:grid;gap:12px}
+.line{display:grid;grid-template-columns:72px 1fr auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line:first-child{padding-top:0}
+.line img{width:72px;height:88px;object-fit:cover;border-radius:12px}
+.line .nm{font-weight:500;font-size:16px}
+.line .sub{font-size:13px;color:var(--slate)}
+.line .qty{margin-top:8px;transform:scale(.9);transform-origin:left}
+.line .qty button{height:34px;width:34px}
+.rm{background:none;border:0;color:var(--brass);font-size:13px;cursor:pointer;padding:0;margin-top:6px;display:block}
+.rm:hover{text-decoration:underline}
+.sumrow{display:flex;justify-content:space-between;font-size:17px;font-weight:500}
+.empty{text-align:center;color:var(--slate);padding:60px 0}
+.formstack{display:grid;gap:14px}
+.back{background:none;border:0;color:var(--brass);cursor:pointer;padding:0;margin-bottom:18px;font-size:15px}
+.back:hover{text-decoration:underline}
+.done h3{font-size:28px;margin-bottom:8px}
+.oid{display:inline-block;background:var(--fog);border-radius:10px;padding:6px 12px;font-weight:600;letter-spacing:.02em;margin:6px 0 14px}
+.done ul{padding-left:18px;color:var(--slate);display:grid;gap:8px;margin:12px 0 20px}
+.recap{background:var(--fog);border-radius:14px;padding:14px 16px;font-size:14px;color:var(--slate);margin-bottom:16px;line-height:1.5}
+</style>
+</head>
+<body>
+<a class="skip" href="#collection">Skip to the collection</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Admiralty Brass Co. home">
+      <span class="mark" aria-hidden="true">AB</span>
+      Admiralty Brass Co.
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#collection">Shop</a>
+      <a class="opt" href="#craft">Craft</a>
+      <a class="opt" href="#ordering">Ordering</a>
+      <a href="contact.html">Contact</a>
+      <button class="cartbtn" id="cartOpen" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="n" id="cartCount">0</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <h1>Brass décor,<br>made by hand.</h1>
+    <p class="lede">Handcrafted brass décor and handicrafts from the workshops of Moradabad, India. Shipped from Ontario, Canada.</p>
+    <div class="actions">
+      <a class="btn" href="#collection">Shop the collection</a>
+      <a class="link" href="#craft">See how they're made</a>
+    </div>
+    <div class="lineup" id="lineup"></div>
+  </div>
+</section>
+
+<section class="flagship" id="flagship" hidden style="padding-bottom:0">
+  <div class="wrap">
+    <div class="flag">
+      <div class="txt">
+        <p style="font-size:15px;color:#a1a1a6">Featured</p>
+        <h2 id="flHead"></h2>
+        <p id="flTag"></p>
+        <p class="price" id="flPrice"></p>
+        <div class="actions">
+          <button class="btn" id="flAdd">Add to cart</button>
+          <button class="link" id="flOpen">Details</button>
+        </div>
+      </div>
+      <img id="flagImg" alt="">
+    </div>
+  </div>
+</section>
+
+<section id="collection">
+  <div class="wrap">
+    <div class="head">
+      <h2>The collection.</h2>
+      <p class="lede" id="collLede">Handcrafted pieces in brass.</p>
+    </div>
+    <div class="filters">
+      <div class="seg" id="seg" role="group" aria-label="Filter the collection"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section id="craft" class="fog">
+  <div class="wrap">
+    <div class="head"><h2>Made the slow way.</h2><p class="lede">Every piece starts as raw brass in the workshops of Moradabad, the city known worldwide as the Brass City.</p></div>
+    <div class="cols">
+      <div><h3>Solid brass</h3><p>Our pieces are worked in solid brass by skilled artisans, so they feel substantial and are made to last for generations.</p></div>
+      <div><h3>Made by hand</h3><p>Cut, shaped, assembled and finished by hand. One artisan, one piece, from start to finish.</p></div>
+      <div><h3>Small batches</h3><p>We build in limited runs and inspect each piece before it ships, so small variations in finish are part of the character.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ordering">
+  <div class="wrap">
+    <div class="head"><h2>How ordering works.</h2><p class="lede">Simple, personal and secure. No payment details are ever entered on this site.</p></div>
+    <div class="steps">
+      <div class="step"><h3>Choose your pieces</h3><p>Add anything from the collection to your cart. You can order several pieces at once.</p></div>
+      <div class="step"><h3>Send your order request</h3><p>Enter your shipping details. Your request goes straight to our team.</p></div>
+      <div class="step"><h3>Pay by invoice</h3><p>We email you an invoice with shipping and taxes. Once it's paid, your piece ships from Ontario by Canada Post.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="fog">
+  <div class="wrap">
+    <div class="head"><h2>Living with brass.</h2></div>
+    <div class="cols">
+      <div><h3>Dust, don't scrub</h3><p>Wipe with a soft, dry cloth. Household cleaners and abrasive polish can dull the hand-finished surface.</p></div>
+      <div><h3>Keep it dry</h3><p>Brass is durable but not moisture-proof. Display it away from bathrooms and sinks.</p></div>
+      <div><h3>Let it age</h3><p>A light patina can develop over the years. Many collectors consider it part of the charm.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="origin">
+  <div class="wrap">
+    <h2>If it arrives damaged, we make it right.</h2>
+    <p class="lede">We replace it or refund you. Questions before you order? We're happy to help.</p>
+    <div class="actions" style="margin-top:26px"><a class="btn" href="contact.html">Contact us</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><h4>Shop</h4><ul id="footShop"></ul></div>
+      <div><h4>Support</h4><ul><li><a href="contact.html">Contact us</a></li><li><a href="contact.html#faq">Shipping and returns</a></li><li><a href="#ordering">How ordering works</a></li></ul></div>
+      <div><h4>Email us</h4><ul>
+        <li><a data-mail="sales" href="mailto:sales@admiraltybrassco.com">sales@admiraltybrassco.com</a></li>
+        <li><a data-mail="support" href="mailto:support@admiraltybrassco.com">support@admiraltybrassco.com</a></li>
+        <li><a data-mail="info" href="mailto:info@admiraltybrassco.com">info@admiraltybrassco.com</a></li>
+      </ul></div>
+      <div><h4>Admiralty Brass Co.</h4><ul><li>Curated in Ontario, Canada</li><li>Handcrafted in Moradabad, India</li></ul></div>
+    </div>
+    <div class="fine"><span>Copyright &copy; 2026 Admiralty Brass Co. All rights reserved.</span><span>All prices in Canadian dollars.</span></div>
+  </div>
+</footer>
+
+<!-- product details -->
+<dialog id="qv" aria-labelledby="qvName">
+  <button class="x" id="qvClose" aria-label="Close details">&times;</button>
+  <div class="qvg">
+    <img id="qvImg" alt="">
+    <div class="qvb">
+      <p class="kind" id="qvKind"></p>
+      <h2 id="qvName"></h2>
+      <p class="tag" id="qvTag"></p>
+      <ul id="qvFeat"></ul>
+      <p class="price" id="qvPrice"></p>
+      <details class="spec"><summary>Specifications</summary><dl id="qvSpec"></dl></details>
+      <div class="buy">
+        <div class="qty"><button id="qvMinus" aria-label="Fewer">&minus;</button><span id="qvQty" aria-live="polite">1</span><button id="qvPlus" aria-label="More">+</button></div>
+        <button class="btn" id="qvAdd">Add to cart</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- cart and checkout -->
+<dialog id="drawer" aria-label="Cart">
+  <div class="dh"><h3 id="dTitle">Cart</h3><button class="x" id="dClose" aria-label="Close cart">&times;</button></div>
+  <div class="db" id="dBody"></div>
+  <div class="df" id="dFoot"></div>
+</dialog>
+
+<script src="config.js"></script>
+<script src="products.js"></script>
+<script>
+const SITE = Object.assign({web3formsKey:"", domain:"admiraltybrassco.com"}, window.SITE || {});
+const mail = n => n + "@" + SITE.domain;
+const $ = s => document.querySelector(s);
+const money = n => "$" + n + " CAD";
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- catalogue ---------- */
+const PRODUCTS = window.PRODUCTS || [];
+const bySku = s => PRODUCTS.find(p => p.sku === s);
+
+/* ---------- cart state ---------- */
+let CART = [];
+try{ CART = JSON.parse(localStorage.getItem("ab_cart") || "[]").filter(c => bySku(c.sku) && Number.isInteger(c.qty) && c.qty > 0); }catch(e){ CART = []; }
+const save = () => { try{ localStorage.setItem("ab_cart", JSON.stringify(CART)); }catch(e){} };
+const count = () => CART.reduce((a,c) => a + c.qty, 0);
+const subtotal = () => CART.reduce((a,c) => a + bySku(c.sku).price * c.qty, 0);
+function refreshBadge(){ const n = count(), el = $("#cartCount"); el.textContent = n; el.classList.toggle("on", n > 0); $("#cartOpen").setAttribute("aria-label", "Open cart, " + n + " item" + (n===1?"":"s")); }
+function addToCart(sku, q){ const it = CART.find(c => c.sku === sku); if(it) it.qty += q; else CART.push({sku, qty:q}); save(); refreshBadge(); }
+
+/* ---------- page render ---------- */
+/* hero photos */
+$("#lineup").innerHTML = (window.HERO_IMAGES || []).slice(0,3).map(h => `<img src="${esc(h.src)}" alt="${esc(h.alt||"")}">`).join("");
+if(!(window.HERO_IMAGES||[]).length) $("#lineup").remove();
+
+/* featured product */
+const feat = bySku(window.FEATURED_SKU || "");
+if(feat){
+  $("#flagship").hidden = false;
+  $("#flHead").textContent = feat.headline || feat.name;
+  $("#flTag").textContent = feat.desc || feat.tag;
+  $("#flPrice").textContent = money(feat.price);
+  $("#flagImg").src = feat.img; $("#flagImg").alt = feat.alt;
+  $("#flAdd").onclick = () => { addToCart(feat.sku, 1); openDrawer("cart"); };
+  $("#flOpen").onclick = () => openQV(feat.sku);
+}
+
+/* categories are built from the products themselves */
+const KINDS = [...new Set(PRODUCTS.map(p => p.kind))];
+const kindLabel = k => (window.CATEGORY_LABELS && window.CATEGORY_LABELS[k]) || (k + "s");
+$("#collLede").textContent = PRODUCTS.length + (PRODUCTS.length === 1 ? " piece" : " pieces") + ", each handcrafted in brass.";
+$("#seg").innerHTML = ["All", ...KINDS].map((k,i) => `<button data-f="${esc(k)}" aria-pressed="${i===0}">${esc(k==="All" ? "All" : kindLabel(k))}</button>`).join("");
+if(KINDS.length < 2) $("#seg").parentElement.hidden = true;
+$("#footShop").innerHTML = KINDS.map(k => `<li><a href="#collection" data-jump="${esc(k)}">${esc(kindLabel(k))}</a></li>`).join("");
+
+function renderGrid(f){
+  const list = PRODUCTS.filter(p => f === "All" || p.kind === f);
+  $("#grid").innerHTML = list.map(p => `
+    <article class="tile">
+      <button class="pic" data-open="${p.sku}" aria-label="View details for ${esc(p.name)}"><img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy"></button>
+      <div class="body">
+        <p class="kind">${esc(p.kind)}</p>
+        <h3>${esc(p.name)}</h3>
+        <p class="tag">${esc(p.tag)}</p>
+        <p class="price">${money(p.price)}</p>
+        <div class="row"><button class="btn sm" data-add="${p.sku}">Add to cart</button><button class="link sm" data-open="${p.sku}">Details</button></div>
+      </div>
+    </article>`).join("");
+}
+function setFilter(f){
+  document.querySelectorAll("#seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === f)));
+  renderGrid(f);
+}
+renderGrid("All");
+$("#seg").addEventListener("click", e => { const b = e.target.closest("button[data-f]"); if(b) setFilter(b.dataset.f); });
+document.querySelectorAll("[data-jump]").forEach(a => a.addEventListener("click", () => setFilter(a.dataset.jump)));
+
+document.addEventListener("click", e => {
+  const o = e.target.closest("[data-open]"); if(o){ openQV(o.dataset.open); return; }
+  const a = e.target.closest("[data-add]"); if(a){ addToCart(a.dataset.add, 1); openDrawer("cart"); }
+});
+
+/* ---------- details dialog ---------- */
+const qv = $("#qv"); let qvP = null, qvN = 1;
+function openQV(sku){
+  qvP = bySku(sku); qvN = 1;
+  $("#qvImg").src = qvP.img; $("#qvImg").alt = qvP.alt;
+  $("#qvKind").textContent = qvP.kind; $("#qvName").textContent = qvP.name; $("#qvTag").textContent = qvP.tag;
+  $("#qvFeat").innerHTML = qvP.features.map(f => "<li>" + esc(f) + "</li>").join("");
+  $("#qvPrice").textContent = money(qvP.price); $("#qvQty").textContent = 1;
+  $("#qvSpec").innerHTML = [["Finish",qvP.finish],["Material",qvP.material||"Solid brass"],["Base",qvP.base],["Ideal for",qvP.ideal],["Item number",qvP.sku]]
+    .map(r => `<div><dt>${r[0]}</dt><dd>${esc(r[1])}</dd></div>`).join("");
+  qv.querySelector("details").open = false;
+  qv.showModal();
+}
+$("#qvClose").onclick = () => qv.close();
+qv.addEventListener("click", e => { if(e.target === qv) qv.close(); });
+$("#qvMinus").onclick = () => { if(qvN > 1){ qvN--; $("#qvQty").textContent = qvN; } };
+$("#qvPlus").onclick = () => { if(qvN < 20){ qvN++; $("#qvQty").textContent = qvN; } };
+$("#qvAdd").onclick = () => { addToCart(qvP.sku, qvN); qv.close(); openDrawer("cart"); };
+
+/* ---------- drawer ---------- */
+const drawer = $("#drawer"), dBody = $("#dBody"), dFoot = $("#dFoot"), dTitle = $("#dTitle");
+let lastOrder = null;
+function openDrawer(view){ if(!drawer.open) drawer.showModal(); ({cart:viewCart, checkout:viewCheckout})[view](); }
+$("#cartOpen").onclick = () => openDrawer("cart");
+$("#dClose").onclick = () => drawer.close();
+drawer.addEventListener("click", e => { if(e.target === drawer) drawer.close(); });
+
+function viewCart(){
+  dTitle.textContent = "Cart";
+  if(!CART.length){
+    dBody.innerHTML = `<p class="empty">Your cart is empty.</p>`;
+    dFoot.innerHTML = `<button class="btn block" id="keep">Browse the collection</button>`;
+    $("#keep").onclick = () => { drawer.close(); location.hash = "#collection"; };
+    return;
+  }
+  dBody.innerHTML = CART.map(c => { const p = bySku(c.sku); return `
+    <div class="line">
+      <img src="${esc(p.img)}" alt="">
+      <div>
+        <div class="nm">${esc(p.name)}</div><div class="sub">${esc(p.kind)}, ${money(p.price)} each</div>
+        <div class="qty"><button data-q="${c.sku}" data-d="-1" aria-label="Fewer ${esc(p.name)}">&minus;</button><span>${c.qty}</span><button data-q="${c.sku}" data-d="1" aria-label="More ${esc(p.name)}">+</button></div>
+        <button class="rm" data-rm="${c.sku}">Remove</button>
+      </div>
+      <div class="nm">${money(p.price * c.qty)}</div>
+    </div>`; }).join("");
+  dFoot.innerHTML = `<div class="sumrow"><span>Subtotal</span><span>${money(subtotal())}</span></div>
+    <p class="note" style="margin:0">Shipping and taxes are added to your invoice. You won't be charged now.</p>
+    <button class="btn block" id="toCheckout">Check out</button>`;
+  $("#toCheckout").onclick = () => viewCheckout();
+}
+dBody.addEventListener("click", e => {
+  const q = e.target.closest("[data-q]"), r = e.target.closest("[data-rm]");
+  if(q){ const it = CART.find(c => c.sku === q.dataset.q); it.qty += Number(q.dataset.d); if(it.qty < 1) CART = CART.filter(c => c !== it); if(it && it.qty > 20) it.qty = 20; save(); refreshBadge(); viewCart(); }
+  if(r){ CART = CART.filter(c => c.sku !== r.dataset.rm); save(); refreshBadge(); viewCart(); }
+});
+
+function viewCheckout(){
+  if(!CART.length){ viewCart(); return; }
+  dTitle.textContent = "Shipping details";
+  dBody.innerHTML = `<button class="back" id="back">&lsaquo; Back to cart</button>
+  <form class="formstack" id="ship" novalidate>
+    <div class="field"><label for="fName">Full name</label><input id="fName" autocomplete="name" required><div class="err" id="eName"></div></div>
+    <div class="field"><label for="fEmail">Email</label><input id="fEmail" type="email" autocomplete="email" required><div class="err" id="eEmail"></div></div>
+    <div class="field"><label for="fPhone">Phone (optional)</label><input id="fPhone" type="tel" autocomplete="tel"></div>
+    <div class="field"><label for="fAddr">Street address</label><input id="fAddr" autocomplete="street-address" required><div class="err" id="eAddr"></div></div>
+    <div class="two">
+      <div class="field"><label for="fCity">City</label><input id="fCity" autocomplete="address-level2" required><div class="err" id="eCity"></div></div>
+      <div class="field"><label for="fProv">Province or state</label><input id="fProv" autocomplete="address-level1"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label for="fPost">Postal code</label><input id="fPost" autocomplete="postal-code"></div>
+      <div class="field"><label for="fCountry">Country</label><input id="fCountry" value="Canada" autocomplete="country-name"></div>
+    </div>
+    <div class="field"><label for="fNote">Notes (optional)</label><textarea id="fNote" style="min-height:80px"></textarea></div>
+    <div class="hp" aria-hidden="true"><label>Leave this empty<input id="fBot" tabindex="-1" autocomplete="off"></label></div>
+    <div id="fStatus" role="status"></div>
+  </form>`;
+  dFoot.innerHTML = `<div class="sumrow"><span>Subtotal</span><span>${money(subtotal())}</span></div>
+    <p class="note" style="margin:0">No payment is taken now. We'll email you an invoice.</p>
+    <button class="btn block" id="send">Send order request</button>`;
+  $("#back").onclick = viewCart;
+  $("#send").onclick = submitOrder;
+  $("#ship").addEventListener("submit", e => { e.preventDefault(); submitOrder(); });
+  setTimeout(() => $("#fName").focus(), 30);
+}
+
+function orderText(id, f){
+  const lines = CART.map(c => { const p = bySku(c.sku); return `${c.qty} x ${p.name} (${p.sku}) - ${money(p.price * c.qty)}`; });
+  return `Order request ${id}\n\n${lines.join("\n")}\n\nSubtotal: ${money(subtotal())} (shipping and taxes to be invoiced)\n\nShip to:\n${f.name}\n${f.addr}\n${f.city}${f.prov ? ", " + f.prov : ""} ${f.post}\n${f.country}\n\nEmail: ${f.email}\nPhone: ${f.phone || "-"}\nNotes: ${f.note || "-"}`;
+}
+async function sendToTeam(payload){
+  if(!SITE.web3formsKey) return null;
+  try{
+    const r = await fetch("https://api.web3forms.com/submit", {method:"POST", headers:{"Content-Type":"application/json", "Accept":"application/json"}, body: JSON.stringify(Object.assign({access_key: SITE.web3formsKey}, payload))});
+    const d = await r.json(); return !!d.success;
+  }catch(e){ return false; }
+}
+async function submitOrder(){
+  const v = id => $(id).value.trim();
+  const f = {name:v("#fName"), email:v("#fEmail"), phone:v("#fPhone"), addr:v("#fAddr"), city:v("#fCity"), prov:v("#fProv"), post:v("#fPost"), country:v("#fCountry"), note:v("#fNote")};
+  const bad = [];
+  const flag = (inp, err, msg) => { $(inp).setAttribute("aria-invalid", "true"); $(err).textContent = msg; bad.push(inp); };
+  ["#fName","#fEmail","#fAddr","#fCity"].forEach(i => { $(i).removeAttribute("aria-invalid"); });
+  ["#eName","#eEmail","#eAddr","#eCity"].forEach(i => { $(i).textContent = ""; });
+  if(!f.name) flag("#fName","#eName","Enter your full name.");
+  if(!/^\S+@\S+\.\S+$/.test(f.email)) flag("#fEmail","#eEmail","Enter a valid email so we can send your invoice.");
+  if(!f.addr) flag("#fAddr","#eAddr","Enter your street address.");
+  if(!f.city) flag("#fCity","#eCity","Enter your city.");
+  if(bad.length){ $(bad[0]).focus(); return; }
+  if($("#fBot").value) return;
+
+  const btn = $("#send"); btn.disabled = true; btn.textContent = "Sending...";
+  const id = "AB-" + Date.now().toString(36).toUpperCase().slice(-6);
+  const text = orderText(id, f);
+  const res = await sendToTeam({subject:"New order request " + id, from_name:"Admiralty Brass website", name:f.name, email:f.email, phone:f.phone, message:text, botcheck:""});
+  if(res === false){
+    btn.disabled = false; btn.textContent = "Send order request";
+    $("#fStatus").innerHTML = `<div class="status bad">We couldn't send your request. Check your connection and try again, or <a href="mailto:${mail("orders")}?subject=${encodeURIComponent("Order request " + id)}&body=${encodeURIComponent(text)}">email it to us instead</a>.</div>`;
+    return;
+  }
+  lastOrder = {id, f, text, viaEmail: res === null, lines: CART.map(c => ({p:bySku(c.sku), q:c.qty})), total: subtotal()};
+  if(res === null){ location.href = `mailto:${mail("orders")}?subject=${encodeURIComponent("Order request " + id)}&body=${encodeURIComponent(text)}`; }
+  CART = []; save(); refreshBadge(); viewDone();
+}
+function viewDone(){
+  const o = lastOrder; dTitle.textContent = o.viaEmail ? "One more step" : "Order request sent";
+  const recap = o.lines.map(l => `${l.q} &times; ${esc(l.p.name)}`).join("<br>");
+  dBody.innerHTML = `<div class="done">
+    <h3>${o.viaEmail ? "Send the email to finish." : "Thank you, " + esc(o.f.name.split(" ")[0]) + "."}</h3>
+    <div class="oid">${o.id}</div>
+    <p style="margin:0 0 14px;color:var(--slate)">${o.viaEmail ? "Your email app should have opened with your order filled in. Press send and we'll receive it." : "We've received your order request."}</p>
+    <div class="recap">${recap}<br><strong>Subtotal ${money(o.total)}</strong> (shipping and taxes added on your invoice)</div>
+    <p style="margin:0"><strong>What happens next</strong></p>
+    <ul><li>We email an invoice to ${esc(o.f.email)} with shipping and taxes.</li><li>Once it's paid, your order ships from Ontario by Canada Post.</li><li>Questions? Email <a href="mailto:${mail("support")}">${mail("support")}</a> and quote ${o.id}.</li></ul>
+  </div>`;
+  dFoot.innerHTML = (o.viaEmail ? `<a class="btn block" href="mailto:${mail("orders")}?subject=${encodeURIComponent("Order request " + o.id)}&body=${encodeURIComponent(o.text)}">Open the email again</a>` : "") + `<button class="btn ${o.viaEmail ? "ghost " : ""}block" id="cont">Continue shopping</button>`;
+  $("#cont").onclick = () => drawer.close();
+}
+refreshBadge();
+</script>
+</body>
+</html>
