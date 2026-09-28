@@ -1,15 +1,7 @@
-/* ------------------------------------------------------------------
-   Admiralty Brass Co. site settings. This is the ONLY file you edit.
-
-   To receive orders and contact messages in your inbox (free):
-   1. Go to https://web3forms.com and enter orders@admiraltybrassco.com
-   2. They email you an "Access Key". Paste it between the quotes below.
-   3. Save this file on GitHub (pencil icon > Commit changes).
-
-   Until a key is added, the site opens the customer's email app with
-   the order or message pre-filled, so nothing is lost.
-------------------------------------------------------------------- */
-window.SITE = {
-  web3formsKey: "",
-  domain: "admiraltybrassco.com"
-};
+<form action="https://api.web3forms.com/submit" method="POST">
+  <input type="hidden" name="access_key" value="01ef3884-0c2e-4777-aaf7-3c39a5c28ab5">
+  <input type="text" name="name" required>
+  <input type="email" name="email" required>
+  <textarea name="message" required></textarea>
+  <button type="submit">Submit</button>
+</form>
