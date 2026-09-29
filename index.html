@@ -347,9 +347,9 @@ dt{color:var(--slate)}dd{margin:0}
       <div class="step"><h3>Bulk or repeat orders</h3><p>Each piece is a one-off, so we hold just one of each. Want more than one, or a larger order for a shop or project? <a href="mailto:sales@admiraltybrassco.com">Contact our sales team</a> and we'll arrange it with you.</p></div>
     </div>
     <div id="delivery" style="margin-top:72px">
-      <div class="head" style="margin-bottom:0"><h2>Delivery.</h2><p class="lede">Delivery is charged at Canada Post rates.</p></div>
-      <div class="rates" id="rateList" aria-label="Delivery fees by destination"></div>
-      <p class="dnote">Your delivery fee is calculated automatically from your postal code at checkout. We ship within Canada and the United States. The fee depends on your zone and on the weight and size of your order. Very large or heavy pieces are quoted individually: send an order request and we'll agree delivery with you on your invoice.</p>
+      <div class="head" style="margin-bottom:0"><h2>Delivery.</h2><p class="lede">Delivery is charged at Canada Post standard rates, based on your location.</p></div>
+      <p class="dnote" style="font-size:19px;color:var(--ink);max-width:640px;margin:32px auto 0">Your delivery charge is worked out by location. We ship from Toronto, Ontario to addresses across Canada and the United States, and the fee depends on where in Canada you live.</p>
+      <p class="dnote">Your delivery fee is calculated automatically from your postal code and added to your order total at checkout, so you see the exact amount before you pay. It also depends on the weight and size of your order. Very large or heavy pieces are quoted individually: send an order request and we'll agree delivery with you on your invoice.</p>
     </div>
   </div>
 </section>
@@ -836,7 +836,6 @@ if(/[?&]paid=1/.test(location.search)){
   drawer.showModal();
 }
 refreshBadge();
-$("#rateList").innerHTML = Object.values(SHIP.zones).map(z => `<div><span>${esc(z.name)}</span><span>${money(z.fee)}</span></div>`).join("") + `<div><span>Each extra kg above ${SHIP.weight.includedKg} kg in the same order</span><span>+ ${money(SHIP.weight.extraPerKg)}</span></div>`;
 </script>
 </body>
 </html>

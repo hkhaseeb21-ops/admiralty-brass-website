@@ -16,6 +16,7 @@
    hstPercent          tax rate for Canadian orders
    leadDays            made-to-order time shown for sold-out / bulk requests
    ===================================================================== */
+/* Fees lowered to match the cheapest ground option (Canada Post Regular Parcel, Sept 2026 estimates). */
 window.SHIPPING = {
   "leadDays": 15,
   "hstPercent": 13,
@@ -23,14 +24,14 @@ window.SHIPPING = {
   "addons": { "engrave": 5, "gift": 5 },
   "weight": { "includedKg": 2, "extraPerKg": 3, "defaultKg": 1, "maxKg": 30, "maxSideCm": 120, "volDivisor": 5000 },
   "zones": {
-    "GTA":   { "name": "Toronto, Mississauga and Hamilton area", "fee": 21 },
-    "ON":    { "name": "Rest of Ontario", "fee": 28 },
-    "QC":    { "name": "Quebec", "fee": 25 },
-    "PRA":   { "name": "Manitoba, Saskatchewan, Alberta", "fee": 33 },
-    "BC":    { "name": "British Columbia", "fee": 34 },
-    "ATL":   { "name": "Atlantic Canada (NB, NS, PE, NL)", "fee": 33 },
-    "NORTH": { "name": "Yukon, Northwest Territories, Nunavut", "fee": 45 },
-    "US":    { "name": "United States", "fee": 28 }
+    "GTA":   { "name": "Toronto, Mississauga and Hamilton area", "fee": 18 },
+    "ON":    { "name": "Rest of Ontario", "fee": 25 },
+    "QC":    { "name": "Quebec", "fee": 22 },
+    "PRA":   { "name": "Manitoba, Saskatchewan, Alberta", "fee": 29 },
+    "BC":    { "name": "British Columbia", "fee": 30 },
+    "ATL":   { "name": "Atlantic Canada (NB, NS, PE, NL)", "fee": 29 },
+    "NORTH": { "name": "Yukon, Northwest Territories, Nunavut", "fee": 40 },
+    "US":    { "name": "United States", "fee": 25 }
   },
   "postal": { "A":"ATL","B":"ATL","C":"ATL","E":"ATL","G":"QC","H":"QC","J":"QC","K":"ON","L":"GTA","M":"GTA","N":"ON","P":"ON","R":"PRA","S":"PRA","T":"PRA","V":"BC","X":"NORTH","Y":"NORTH" }
 };
