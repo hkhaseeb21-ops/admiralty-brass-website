@@ -499,7 +499,7 @@ const giftTot = () => CART.reduce((a,c) => a + (c.gift ? ADDON.gift * c.qty : 0)
 const extras = () => engTot() + giftTot();
 const extrasOf = c => (c.engrave ? ADDON.engrave : 0) * c.qty + (c.gift ? ADDON.gift : 0) * c.qty;
 const subtotal = () => merch() + extras();
-const sumRows = () => { const r = (a,v) => `<div class="sumrow" style="font-weight:400;font-size:15px"><span>${a}</span><span>${v}</span></div>`; return (extras() ? r("Items", money(merch())) + (engTot() ? r("Wood engraving", money(engTot())) : "") + (giftTot() ? r("Premium gift packing", money(giftTot())) : "") : "") + `${sumRows()}`; };
+const sumRows = () => { const r = (a,v) => `<div class="sumrow" style="font-weight:400;font-size:15px"><span>${a}</span><span>${v}</span></div>`; return (extras() ? r("Items", money(merch())) + (engTot() ? r("Wood engraving", money(engTot())) : "") + (giftTot() ? r("Premium gift packing", money(giftTot())) : "") : "") + r("Subtotal", money(subtotal())); };
 const optsHTML = (o, k) => `<div class="opts">
   <label class="orow"><input type="checkbox" data-o="engrave" data-k="${k}" ${o.engrave ? "checked" : ""}><span><b>+$5</b> Engraving on wood<small>Custom text on a wooden plate, per piece</small></span></label>
   ${o.engrave ? `<input class="engtxt" data-o="engText" data-k="${k}" maxlength="40" aria-label="Text to engrave" placeholder="Text to engrave (max 40 characters)" value="${esc(o.engText || "")}">` : ""}
