@@ -247,7 +247,7 @@ dt{color:var(--slate)}dd{margin:0}
     <div class="step"><h3>Or pay by invoice</h3><p>Click Send order request instead. Our team checks your order and emails you an invoice with delivery and tax details. Your order ships once it's paid.</p></div>
   </div>
   <div id="delivery" style="margin-top:64px">
-    <div class="head" style="margin-bottom:0"><h2>Delivery.</h2><p class="lede">Delivery is charged at Canada Post rates.</p></div>
+    <div class="head" style="margin-bottom:0"><h2>Delivery.</h2><p class="lede">Free delivery on orders over $150 in Canada and $250 to the United States. Otherwise, delivery is charged at Canada Post rates.</p></div>
     <p class="dnote">Your delivery fee is calculated from your postal code at checkout. We ship within Canada and the United States. Premium gift boxes are quoted separately.</p>
   </div>
 </div></section>
@@ -304,8 +304,9 @@ const SITE=Object.assign({web3formsKey:"01ef3884-0c2e-4777-aaf7-3c39a5c28ab5",pa
 const mail=n=>n+"@"+SITE.domain, $=s=>document.querySelector(s), money=n=>"$"+n+" CAD";
 /* Delivery fees (whole CAD dollars): fee = zone fee + extra for each additional piece. Edit the numbers to change fees. */
 const SHIP={
-  extraPerPiece:3,
-  zones:{GTA:{name:"Toronto, Mississauga and Hamilton area",fee:21},ON:{name:"Rest of Ontario",fee:28},QC:{name:"Quebec",fee:25},PRA:{name:"Manitoba, Saskatchewan, Alberta",fee:33},BC:{name:"British Columbia",fee:34},ATL:{name:"Atlantic Canada (NB, NS, PE, NL)",fee:33},NORTH:{name:"Yukon, Northwest Territories, Nunavut",fee:45},US:{name:"United States",fee:28}},
+  extraPerPiece:1,
+  freeOver:{Canada:150,"United States":250}, /* free delivery when the pieces subtotal reaches this (CAD). Remove a country to turn it off. */
+  zones:{GTA:{name:"Toronto, Mississauga and Hamilton area",fee:15},ON:{name:"Rest of Ontario",fee:18},QC:{name:"Quebec",fee:20},PRA:{name:"Manitoba, Saskatchewan, Alberta",fee:25},BC:{name:"British Columbia",fee:26},ATL:{name:"Atlantic Canada (NB, NS, PE, NL)",fee:25},NORTH:{name:"Yukon, Northwest Territories, Nunavut",fee:38},US:{name:"United States",fee:26}},
   postal:{A:"ATL",B:"ATL",C:"ATL",E:"ATL",G:"QC",H:"QC",J:"QC",K:"ON",L:"GTA",M:"GTA",N:"ON",P:"ON",R:"PRA",S:"PRA",T:"PRA",V:"BC",X:"NORTH",Y:"NORTH"}
 };
 function shipQuote(country,postal,pieces){
@@ -321,7 +322,8 @@ function shipQuote(country,postal,pieces){
   }else err="We currently ship to Canada and the United States only.";
   if(!z) return {err};
   const zone=SHIP.zones[z];
-  return {zone:zone.name,fee:zone.fee+SHIP.extraPerPiece*Math.max(0,pieces-1)};
+  const free=subtotal()>=(SHIP.freeOver[country]||Infinity);
+  return {zone:zone.name,free,fee:free?0:zone.fee+SHIP.extraPerPiece*Math.max(0,pieces-1)};
 }
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const PRODUCTS=window.PRODUCTS||[], bySku=s=>PRODUCTS.find(p=>p.sku===s);
@@ -453,6 +455,7 @@ window.addToCart = function(sku, q, eng){
 function cartFoot(){
   dFoot.innerHTML = `<div class="sumrow"><span>Subtotal</span><span>${money(subtotal())}</span></div>` +
     (engT() ? `<div class="sumrow" style="font-weight:400;font-size:15px"><span>Engraving (${engN()} &times; $${ENG_FEE})</span><span>${money(engT())}</span></div>` : "") +
+    (subtotal() < SHIP.freeOver.Canada ? `<p class="note" style="margin:0;color:var(--brass);font-weight:600">Add ${money(SHIP.freeOver.Canada - subtotal())} more for free delivery in Canada.</p>` : `<p class="note" style="margin:0;color:var(--brass);font-weight:600">You've unlocked free delivery in Canada.</p>`) +
     `<p class="note" style="margin:0">Delivery is calculated from your address and 13% HST is added at checkout. You won't be charged until you pay.</p>
     <button class="btn block" id="toCheckout">Check out</button>`;
   $("#toCheckout").onclick = () => viewCheckout();
@@ -523,7 +526,7 @@ function bd(t, lines){
   h += `<tr class="sep"><td>Items subtotal</td><td>${m2(t.sub + t.eng)}</td></tr>`;
   if(t.wr) h += `<tr><td>Standard gift box</td><td>${m2(t.wr)}</td></tr>`;
   if(t.prem) h += `<tr><td>Premium gift box<br><span style="color:var(--slate);font-size:13px">Design and price sent by our team</span></td><td>Quoted</td></tr>`;
-  h += `<tr><td>Delivery${t.ok ? `<br><span style="color:var(--slate);font-size:13px">${esc(t.q.zone)}, Canada Post</span>` : ""}</td><td>${t.ok ? m2(t.ship) : "Enter postal code"}</td></tr>`;
+  h += `<tr><td>Delivery${t.ok ? `<br><span style="color:var(--slate);font-size:13px">${esc(t.q.zone)}, Canada Post</span>` : ""}</td><td>${t.ok ? (t.ship ? m2(t.ship) : "Free") : "Enter postal code"}</td></tr>`;
   h += `<tr class="sep"><td>Total before tax</td><td>${t.ok ? m2(t.pre) : "-"}</td></tr>`;
   h += `<tr><td>${t.country === "Canada" ? "HST (13%)" : "Tax"}</td><td>${t.ok ? (t.tax ? m2(t.tax) : "None") : "-"}</td></tr>`;
   h += `<tr class="sep tot"><td>Order total${t.prem ? " (before premium box)" : ""}</td><td>${t.ok ? m2(t.total) : "-"}</td></tr>`;
