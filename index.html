@@ -423,13 +423,16 @@ dt{color:var(--slate)}dd{margin:0}
 <script src="products.js"></script>
 <script src="shipping.js"></script>
 <script>
-const SITE = Object.assign({web3formsKey:"01ef3884-0c2e-4777-aaf7-3c39a5c28ab5", payEndpoint:"https://admiralty-checkout.hk-haseeb21.workers.dev", domain:"admiraltybrassco.com", payAddons:false, confirmEndpoint:""}, window.SITE || {});
+/* payEndpoint, web3formsKey and domain are set in config.js - edit them there, not here. */
+const SITE = Object.assign({web3formsKey:"", payEndpoint:"", domain:"admiraltybrassco.com", payAddons:false, confirmEndpoint:""}, window.SITE || {});
 const mail = n => n + "@" + SITE.domain;
 const $ = s => document.querySelector(s);
 const money = n => "$" + n + " CAD";
 /* ---------- delivery fee calculator ----------
-   Edit the numbers below to change your delivery fees (whole dollars, CAD).
-   fee = zone fee + extra for each additional piece in the order. */
+   DO NOT edit the numbers below to change prices. This block is only a
+   fallback used if shipping.js fails to load. The real, editable prices
+   live in shipping.js (window.SHIPPING) - edit that file instead, so
+   there is only one place your delivery fees are set. */
 const SHIP_DEFAULT = {
   /* Weight-based extra: each whole kg above includedKg adds extraPerKg.
      Products can set weightKg and dims:{l,w,h} (cm) in products.js.
@@ -497,7 +500,7 @@ let CART = [];
 try{ CART = JSON.parse(localStorage.getItem("ab_cart") || "[]").filter(c => bySku(c.sku) && Number.isInteger(c.qty) && c.qty > 0).map(c => ({sku:c.sku, qty:Math.min(c.qty, stockOf(bySku(c.sku))), engrave:!!c.engrave, engText:String(c.engText||"").slice(0,40), gift:!!c.gift})).filter(c => c.qty > 0); }catch(e){ CART = []; }
 const save = () => { try{ localStorage.setItem("ab_cart", JSON.stringify(CART)); }catch(e){} };
 const count = () => CART.reduce((a,c) => a + c.qty, 0);
-const ADDON = Object.assign({engrave:5, gift:5}, SHIP.addons || {});
+const ADDON = Object.assign({engrave:5, gift:5, wrap:6}, SHIP.addons || {});
 const merch = () => CART.reduce((a,c) => a + bySku(c.sku).price * c.qty, 0);
 const engTot = () => CART.reduce((a,c) => a + (c.engrave ? ADDON.engrave * c.qty : 0), 0);
 const giftTot = () => CART.reduce((a,c) => a + (c.gift ? ADDON.gift * c.qty : 0), 0);
@@ -680,12 +683,17 @@ function viewCheckout(){
     <div class="field"><label for="fNote">Notes (optional)</label><textarea id="fNote" style="min-height:80px"></textarea></div>
     <div class="field"><label for="fOcc">This order is for</label><select id="fOcc"><option>Personal use</option><option>Gift</option><option>Corporate</option></select></div>
     <div class="field" id="occBox" hidden><label for="fOccTxt" id="occLbl"></label><input id="fOccTxt" maxlength="200"></div>
+    <div id="giftBox" hidden style="display:grid;gap:10px">
+      <label class="same"><input type="checkbox" id="gWrap"> Gift wrap this order <span class="note" style="margin-left:4px">(+${ADDON.wrap} per order)</span></label>
+      <label class="same"><input type="checkbox" id="gHide"> Hide prices on the packing slip</label>
+    </div>
     <h4 class="step"><span>4</span>Payment</h4>
     <div class="paybox"><b>Credit or debit card.</b> You enter your card details on Stripe's secure payment page, never on our site. We email your invoice and receipt to the address above once payment goes through.</div>
     <div class="hp" aria-hidden="true"><label>Leave this empty<input id="fBot" tabindex="-1" autocomplete="off"></label></div>
     <div id="fStatus" role="status"></div>
   </form>`;
   dFoot.innerHTML = `<div class="osum"><strong>Order summary</strong>${CART.map(c => { const p = bySku(c.sku); return `<div class="oi"><span>${c.qty} &times; ${esc(p.name)}</span><span>${money(p.price * c.qty + extrasOf(c))}</span></div>`; }).join("")}${sumRows()}
+    <div class="sumrow" id="wrapRow" hidden><span>Gift wrap</span><span id="wrapAmt"></span></div>
     <div class="sumrow"><span>Delivery</span><span id="shipAmt">Enter postal code</span></div>
     <div class="sumrow"><span id="taxLbl">HST (${HST}%)</span><span id="taxAmt">-</span></div>
     <div class="sumrow" style="font-weight:600"><span>Order total</span><span id="totAmt">${money(subtotal())}</span></div></div>
@@ -696,7 +704,9 @@ function viewCheckout(){
   const refreshShip = () => {
     const q = shipQuote($("#fCountry").value, $("#fPost").value, count());
     $("#shipAmt").textContent = q.err ? "Enter postal code" : q.manual ? "Quoted on invoice" : money(q.fee);
-    const fee = q.err ? 0 : q.fee, base = subtotal() + fee;
+    const wrapOn = $("#fOcc").value === "Gift" && $("#gWrap").checked, wrap = wrapOn ? ADDON.wrap : 0;
+    $("#wrapRow").hidden = !wrapOn; $("#wrapAmt").textContent = money(wrap);
+    const fee = q.err ? 0 : q.fee, base = subtotal() + fee + wrap;
     const tax = $("#fCountry").value === "Canada" ? Math.round(base * HST) / 100 : 0;
     const m2 = n => "$" + n.toFixed(2) + " CAD";
     $("#taxAmt").textContent = q.err ? "-" : q.manual ? "On invoice" : (tax ? m2(tax) : "None");
@@ -709,7 +719,8 @@ function viewCheckout(){
   $("#pay").onclick = payNow;
   ["fPost","fCountry"].forEach(id => { $("#"+id).addEventListener("input", refreshShip); $("#"+id).addEventListener("change", refreshShip); });
   refreshShip();
-  $("#fOcc").onchange = () => { const v = $("#fOcc").value; $("#occBox").hidden = v === "Personal use"; $("#occLbl").textContent = v === "Gift" ? "Gift message (we'll include it with the gift)" : "Company name and PO reference"; };
+  $("#fOcc").onchange = () => { const v = $("#fOcc").value; $("#occBox").hidden = v === "Personal use"; $("#occLbl").textContent = v === "Gift" ? "Gift message (we'll include it with the gift)" : "Company name and PO reference"; $("#giftBox").hidden = v !== "Gift"; if(v !== "Gift"){ $("#gWrap").checked = false; $("#gHide").checked = false; } refreshShip(); };
+  $("#gWrap").onchange = refreshShip;
   $("#back").onclick = viewCart;
   $("#fSame").onchange = () => { $("#billBox").hidden = $("#fSame").checked; };
   $("#send").onclick = submitOrder;
@@ -721,8 +732,8 @@ const m2 = n => "$" + n.toFixed(2) + " CAD";
 function breakdown(f, q){
   const rows = CART.map(c => { const p = bySku(c.sku); return {p, qty:c.qty, item:p.price * c.qty, eng:c.engrave ? ADDON.engrave * c.qty : 0, engText:c.engrave ? String(c.engText).trim() : "", gift:c.gift ? ADDON.gift * c.qty : 0}; });
   const sum = k => rows.reduce((a, r) => a + r[k], 0);
-  const b = {rows, items:sum("item"), eng:sum("eng"), gift:sum("gift")};
-  b.sub = b.items + b.eng + b.gift; b.ship = q.manual ? null : q.fee;
+  const b = {rows, items:sum("item"), eng:sum("eng"), gift:sum("gift"), wrap:f.gWrap ? ADDON.wrap : 0};
+  b.sub = b.items + b.eng + b.gift + b.wrap; b.ship = q.manual ? null : q.fee;
   b.tax = b.ship === null ? null : f.country === "Canada" ? Math.round((b.sub + b.ship) * HST) / 100 : 0;
   b.total = b.ship === null ? null : b.sub + b.ship + b.tax;
   return b;
@@ -730,11 +741,11 @@ function breakdown(f, q){
 function orderText(id, f, q, forCustomer){
   const b = breakdown(f, q);
   const lines = b.rows.map(r => `${r.qty} x ${r.p.name} (${r.p.sku}): ${m2(r.item)}` + (r.eng ? `\n    + Wood engraving "${r.engText}": ${m2(r.eng)}` : "") + (r.gift ? `\n    + Premium gift packing: ${m2(r.gift)}` : ""));
-  const cost = [`Items: ${m2(b.items)}`, b.eng ? `Wood engraving: ${m2(b.eng)}` : "", b.gift ? `Premium gift packing: ${m2(b.gift)}` : "", `Subtotal: ${m2(b.sub)}`,
+  const cost = [`Items: ${m2(b.items)}`, b.eng ? `Wood engraving: ${m2(b.eng)}` : "", b.gift ? `Premium gift packing: ${m2(b.gift)}` : "", b.wrap ? `Gift wrap: ${m2(b.wrap)}` : "", `Subtotal: ${m2(b.sub)}`,
     `Delivery (${q.zone}): ${b.ship === null ? "to be quoted on your invoice (large or heavy item)" : m2(b.ship)}`,
     b.tax === null ? `Delivery and ${HST}% HST will be added on your invoice` : f.country === "Canada" ? `HST (${HST}%): ${m2(b.tax)}` : "HST: not applicable (United States)",
     b.total === null ? "" : `TOTAL: ${m2(b.total)}`].filter(Boolean).join("\n");
-  const occ = f.occ && f.occ !== "Personal use" ? `\nOrder type: ${f.occ}${f.occTxt ? " - " + f.occTxt : ""}` : "";
+  const occ = f.occ && f.occ !== "Personal use" ? `\nOrder type: ${f.occ}${f.occTxt ? " - " + f.occTxt : ""}${f.occ === "Gift" ? `\nGift wrap: ${f.gWrap ? "yes" : "no"}\nHide prices on packing slip: ${f.gHide ? "yes" : "no"}` : ""}` : "";
   const ship = `${f.name}\n${f.addr}\n${f.city}${f.prov ? ", " + f.prov : ""} ${f.post}\n${f.country}`;
   if(forCustomer) return `Hi ${f.name.split(" ")[0]},\n\nThank you for choosing Admiralty Brass Co. Your order request ${id} is with our team, and we truly appreciate your support of our artisans in Moradabad.\n\nYour order\n${lines.join("\n")}\n\nCost breakdown\n${cost}${occ}\n\nShip to\n${ship}\n\nWhat happens next: we'll check your order and email your invoice. Once it's paid, your order ships from Ontario by Canada Post. Questions? Reply to this email or write to ${mail("support")} and quote ${id}.\n\nWith thanks,\nAdmiralty Brass Co.`;
   return `Order request ${id}${occ}\n\n${lines.join("\n")}\n\nCost breakdown\n${cost}\n\nShip to:\n${ship}\n\nBilling: ${f.sameBill ? "same as shipping" : [f.bill.name, f.bill.addr, f.bill.city + (f.bill.prov ? ", " + f.bill.prov : "") + " " + f.bill.post, f.bill.country].join(", ")}\nEmail: ${f.email}\nPhone: ${f.phone || "-"}\nNotes: ${f.note || "-"}`;
@@ -753,6 +764,8 @@ async function sendToTeam(payload){
 function collect(){
   const v = id => $(id).value.trim();
   const f = {name:v("#fName"), email:v("#fEmail"), phone:v("#fPhone"), addr:v("#fAddr"), city:v("#fCity"), prov:v("#fProv"), post:v("#fPost"), country:v("#fCountry"), note:v("#fNote"), occ:$("#fOcc").value, occTxt:v("#fOccTxt")};
+  f.gWrap = f.occ === "Gift" && $("#gWrap").checked;
+  f.gHide = f.occ === "Gift" && $("#gHide").checked;
   f.sameBill = $("#fSame").checked;
   f.bill = f.sameBill ? {name:f.name, addr:f.addr, city:f.city, prov:f.prov, post:f.post, country:f.country} : {name:v("#bName"), addr:v("#bAddr"), city:v("#bCity"), prov:v("#bProv"), post:v("#bPost"), country:$("#bCountry").value};
   const bad = [];
@@ -815,7 +828,7 @@ async function submitOrder(){
 function viewDone(){
   const o = lastOrder; dTitle.textContent = o.viaEmail ? "One more step" : "Order request sent";
   const b = o.b, rw = (a, v, c) => `<div${c ? ' class="' + c + '"' : ""}><span>${a}</span><span>${v}</span></div>`;
-  const recap = '<div class="rc">' + b.rows.map(r => rw(r.qty + " &times; " + esc(r.p.name), m2(r.item)) + (r.eng ? rw("+ Wood engraving &ldquo;" + esc(r.engText) + "&rdquo;", m2(r.eng), "sub2") : "") + (r.gift ? rw("+ Premium gift packing", m2(r.gift), "sub2") : "")).join("") + rw("Subtotal", m2(b.sub)) + rw("Delivery", b.ship === null ? "On invoice" : m2(b.ship)) + (b.tax === null ? rw("HST", "On invoice") : o.f.country === "Canada" ? rw("HST (" + HST + "%)", m2(b.tax)) : "") + (b.total === null ? "" : rw("Total", m2(b.total), "tot")) + '</div>';
+  const recap = '<div class="rc">' + b.rows.map(r => rw(r.qty + " &times; " + esc(r.p.name), m2(r.item)) + (r.eng ? rw("+ Wood engraving &ldquo;" + esc(r.engText) + "&rdquo;", m2(r.eng), "sub2") : "") + (r.gift ? rw("+ Premium gift packing", m2(r.gift), "sub2") : "")).join("") + (b.wrap ? rw("Gift wrap", m2(b.wrap)) : "") + rw("Subtotal", m2(b.sub)) + rw("Delivery", b.ship === null ? "On invoice" : m2(b.ship)) + (b.tax === null ? rw("HST", "On invoice") : o.f.country === "Canada" ? rw("HST (" + HST + "%)", m2(b.tax)) : "") + (b.total === null ? "" : rw("Total", m2(b.total), "tot")) + '</div>';
   dBody.innerHTML = `<div class="done">
     <h3>${o.viaEmail ? "Send the email to finish." : "Thank you, " + esc(o.f.name.split(" ")[0]) + "."}</h3>${o.viaEmail ? "" : "<p style=\"margin:0 0 8px;color:var(--slate)\">We're grateful you chose handcrafted brass.</p>"}
     <div class="oid">${o.id}</div>
@@ -824,8 +837,27 @@ function viewDone(){
     <p style="margin:0"><strong>What happens next</strong></p>
     <ul><li>Our team will check your order and email an invoice to ${esc(o.f.email)} with delivery and ${HST}% HST.</li><li>Once it's paid, your order ships from Ontario by Canada Post.</li><li>Questions? Email <a href="mailto:${mail("support")}">${mail("support")}</a> and quote ${o.id}.</li></ul>
   </div>`;
-  dFoot.innerHTML = (o.viaEmail ? `<a class="btn block" href="mailto:${mail("orders")}?subject=${encodeURIComponent("Order request " + o.id)}&body=${encodeURIComponent(o.text)}">Open the email again</a>` : "") + `<button class="btn ${o.viaEmail ? "ghost " : ""}block" id="cont">Continue shopping</button>`;
+  dFoot.innerHTML = (o.viaEmail ? `<a class="btn block" href="mailto:${mail("orders")}?subject=${encodeURIComponent("Order request " + o.id)}&body=${encodeURIComponent(o.text)}">Open the email again</a>` : `<button class="btn ghost block" id="prt">Print receipt</button>`) + `<button class="btn ${o.viaEmail ? "ghost " : ""}block" id="cont">Continue shopping</button>`;
   $("#cont").onclick = () => drawer.close();
+  if(!o.viaEmail) $("#prt").onclick = () => printReceipt(o);
+}
+function printReceipt(o){
+  const b = o.b, f = o.f, row = (a, v, bold) => `<tr${bold ? ' class="tot"' : ""}><td>${a}</td><td>${v}</td></tr>`;
+  const items = b.rows.map(r => row(r.qty + " &times; " + esc(r.p.name) + ` (${esc(r.p.sku)})`, m2(r.item)) +
+    (r.eng ? row("&nbsp;&nbsp;+ Wood engraving &ldquo;" + esc(r.engText) + "&rdquo;", m2(r.eng)) : "") +
+    (r.gift ? row("&nbsp;&nbsp;+ Premium gift packing", m2(r.gift)) : "")).join("");
+  const rows = items + (b.wrap ? row("Gift wrap", m2(b.wrap)) : "") + row("Subtotal", m2(b.sub)) +
+    row("Delivery" + (o.ship.zone ? " (" + esc(o.ship.zone) + ")" : ""), b.ship === null ? "On invoice" : m2(b.ship)) +
+    (b.tax === null ? row("HST", "On invoice") : f.country === "Canada" ? row("HST (" + HST + "%)", m2(b.tax)) : "") +
+    (b.total === null ? "" : row("Total", m2(b.total), true));
+  const addr = [f.name, f.addr, f.city + (f.prov ? ", " + f.prov : "") + " " + f.post, f.country].map(esc).join("<br>");
+  const gift = f.occ === "Gift" ? `<p><strong>Gift order.</strong> ${f.gWrap ? "Gift wrapped. " : ""}${f.gHide ? "Prices hidden on packing slip." : ""}${f.occTxt ? "<br>Message: &ldquo;" + esc(f.occTxt) + "&rdquo;" : ""}</p>` : "";
+  const w = open("", "_blank"); if(!w) return;
+  w.document.write(`<title>Order ${o.id}</title><style>body{font:14px/1.5 Arial,sans-serif;padding:32px;max-width:640px;margin:auto;color:#111}.rh{display:flex;justify-content:space-between;border-bottom:2px solid #8a5f1c;padding-bottom:12px;margin-bottom:16px}table{width:100%;border-collapse:collapse;margin-top:16px}td{padding:5px 0;vertical-align:top}td:last-child{text-align:right;white-space:nowrap}tr.tot td{font-weight:700;border-top:1px solid #ccc;padding-top:10px}h5{margin:18px 0 4px;color:#666;font-size:13px}</style>
+    <div class="rh"><div><strong>Admiralty Brass Co.</strong><br><span style="color:#666">Ontario, Canada</span></div><div style="text-align:right"><strong>Order request</strong><br>${esc(o.id)}<br><span style="color:#666">${new Date().toLocaleDateString("en-CA",{year:"numeric",month:"long",day:"numeric"})}</span></div></div>
+    <h5>Ship to</h5><p>${addr}</p>${gift}<h5>Order details</h5><table>${rows}</table>
+    <p style="color:#666;margin-top:20px">Questions? Email ${mail("support")} and quote ${o.id}.</p>`);
+  w.document.close(); w.print();
 }
 if(/[?&]paid=1/.test(location.search)){
   CART = []; save(); history.replaceState(null, "", location.pathname);

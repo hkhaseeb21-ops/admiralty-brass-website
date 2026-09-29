@@ -21,7 +21,7 @@ window.SHIPPING = {
   "leadDays": 15,
   "hstPercent": 13,
   "bulkAt": 5,
-  "addons": { "engrave": 5, "gift": 5 },
+  "addons": { "engrave": 5, "gift": 5, "wrap": 6 },
   "weight": { "includedKg": 2, "extraPerKg": 3, "defaultKg": 1, "maxKg": 30, "maxSideCm": 120, "volDivisor": 5000 },
   "zones": {
     "GTA":   { "name": "Toronto, Mississauga and Hamilton area", "fee": 18 },
