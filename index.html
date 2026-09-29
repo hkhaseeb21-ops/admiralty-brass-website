@@ -231,6 +231,17 @@ dt{color:var(--slate)}dd{margin:0}
 .orow small{display:block;color:var(--slate);font-size:12px;line-height:1.35}
 .engtxt{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
 .line .opts{grid-column:1/-1;margin:0}
+#drawer.wide{width:min(640px,100%)}
+.step{display:flex;align-items:center;gap:10px;margin:22px 0 2px;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.step:first-of-type{margin-top:4px}
+.step span{width:26px;height:26px;border-radius:50%;background:var(--brass);color:var(--on-brass);font-size:14px;display:inline-flex;align-items:center;justify-content:center}
+.paybox{background:var(--fog);border-radius:14px;padding:14px 16px;font-size:14px;color:var(--slate);line-height:1.5}
+.paybox b{color:var(--ink)}
+.same{display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer}
+.same input{accent-color:var(--brass);width:18px;height:18px}
+.osum{background:var(--fog);border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.osum .oi{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.osum .sumrow{font-size:15px}
 .rc div{display:flex;justify-content:space-between;gap:12px}
 .rc .sub2{padding-left:12px}
 .rc .tot{font-weight:600;color:var(--ink);border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
@@ -595,6 +606,7 @@ $("#dClose").onclick = () => drawer.close();
 drawer.addEventListener("click", e => { if(e.target === drawer) drawer.close(); });
 
 function viewCart(){
+  drawer.classList.remove("wide");
   dTitle.textContent = "Cart";
   if(!CART.length){
     dBody.innerHTML = `<p class="empty">Your cart is empty.</p>`;
@@ -628,9 +640,10 @@ dBody.addEventListener("click", e => {
 
 function viewCheckout(){
   if(!CART.length){ viewCart(); return; }
-  dTitle.textContent = "Shipping details";
+  dTitle.textContent = "Checkout"; drawer.classList.add("wide");
   dBody.innerHTML = `<button class="back" id="back">&lsaquo; Back to cart</button>
   <form class="formstack" id="ship" novalidate>
+    <h4 class="step"><span>1</span>Shipping address</h4>
     <div class="field"><label for="fName">Full name</label><input id="fName" autocomplete="name" required><div class="err" id="eName"></div></div>
     <div class="field"><label for="fEmail">Email</label><input id="fEmail" type="email" autocomplete="email" required><div class="err" id="eEmail"></div></div>
     <div class="field"><label for="fPhone">Phone (optional)</label><input id="fPhone" type="tel" autocomplete="tel"></div>
@@ -643,19 +656,36 @@ function viewCheckout(){
       <div class="field"><label for="fPost">Postal or ZIP code</label><input id="fPost" autocomplete="postal-code" required><div class="err" id="ePost"></div></div>
       <div class="field"><label for="fCountry">Country</label><select id="fCountry" autocomplete="country-name"><option value="Canada">Canada</option><option value="United States">United States</option></select></div>
     </div>
+    <h4 class="step"><span>2</span>Billing address</h4>
+    <label class="same"><input type="checkbox" id="fSame" checked> Billing address is the same as shipping</label>
+    <div id="billBox" class="formstack" hidden>
+      <div class="field"><label for="bName">Name on card</label><input id="bName" autocomplete="cc-name"><div class="err" id="eBName"></div></div>
+      <div class="field"><label for="bAddr">Billing street address</label><input id="bAddr" autocomplete="billing street-address"><div class="err" id="eBAddr"></div></div>
+      <div class="two">
+        <div class="field"><label for="bCity">City</label><input id="bCity" autocomplete="billing address-level2"><div class="err" id="eBCity"></div></div>
+        <div class="field"><label for="bProv">Province or state</label><input id="bProv" autocomplete="billing address-level1"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label for="bPost">Postal or ZIP code</label><input id="bPost" autocomplete="billing postal-code"><div class="err" id="eBPost"></div></div>
+        <div class="field"><label for="bCountry">Country</label><select id="bCountry"><option value="Canada">Canada</option><option value="United States">United States</option></select></div>
+      </div>
+    </div>
+    <h4 class="step"><span>3</span>Order details</h4>
     <div class="field"><label for="fNote">Notes (optional)</label><textarea id="fNote" style="min-height:80px"></textarea></div>
     <div class="field"><label for="fOcc">This order is for</label><select id="fOcc"><option>Personal use</option><option>Gift</option><option>Corporate</option></select></div>
     <div class="field" id="occBox" hidden><label for="fOccTxt" id="occLbl"></label><input id="fOccTxt" maxlength="200"></div>
+    <h4 class="step"><span>4</span>Payment</h4>
+    <div class="paybox"><b>Credit or debit card.</b> You enter your card details on Stripe's secure payment page, never on our site. We email your invoice and receipt to the address above once payment goes through.</div>
     <div class="hp" aria-hidden="true"><label>Leave this empty<input id="fBot" tabindex="-1" autocomplete="off"></label></div>
     <div id="fStatus" role="status"></div>
   </form>`;
-  dFoot.innerHTML = `${sumRows()}
+  dFoot.innerHTML = `<div class="osum"><strong>Order summary</strong>${CART.map(c => { const p = bySku(c.sku); return `<div class="oi"><span>${c.qty} &times; ${esc(p.name)}</span><span>${money(p.price * c.qty + extrasOf(c))}</span></div>`; }).join("")}${sumRows()}
     <div class="sumrow"><span>Delivery</span><span id="shipAmt">Enter postal code</span></div>
     <div class="sumrow"><span>HST (13%)</span><span id="taxAmt">-</span></div>
-    <div class="sumrow" style="font-weight:600"><span>Total with HST</span><span id="totAmt">${money(subtotal())}</span></div>
+    <div class="sumrow" style="font-weight:600"><span>Order total</span><span id="totAmt">${money(subtotal())}</span></div></div>
     <p class="note" style="margin:0" id="payNote">Pay by card now. If you prefer an invoice, send an order request and our team will check it and email you the invoice. No payment is taken until you pay.</p>
-    <button class="btn block" id="pay" hidden>Pay now by card</button>
-    <button class="btn ghost block" id="send">Send order request</button>`;
+    <button class="btn block" id="pay" hidden>Place your order and pay</button>
+    <button class="btn ghost block" id="send">Email me an invoice instead</button>`;
   const PAYNOTE = $("#payNote").textContent;
   const refreshShip = () => {
     const q = shipQuote($("#fCountry").value, $("#fPost").value, count());
@@ -675,6 +705,7 @@ function viewCheckout(){
   refreshShip();
   $("#fOcc").onchange = () => { const v = $("#fOcc").value; $("#occBox").hidden = v === "Personal use"; $("#occLbl").textContent = v === "Gift" ? "Gift message (we'll include it with the gift)" : "Company name and PO reference"; };
   $("#back").onclick = viewCart;
+  $("#fSame").onchange = () => { $("#billBox").hidden = $("#fSame").checked; };
   $("#send").onclick = submitOrder;
   $("#ship").addEventListener("submit", e => { e.preventDefault(); submitOrder(); });
   setTimeout(() => $("#fName").focus(), 30);
@@ -700,7 +731,7 @@ function orderText(id, f, q, forCustomer){
   const occ = f.occ && f.occ !== "Personal use" ? `\nOrder type: ${f.occ}${f.occTxt ? " - " + f.occTxt : ""}` : "";
   const ship = `${f.name}\n${f.addr}\n${f.city}${f.prov ? ", " + f.prov : ""} ${f.post}\n${f.country}`;
   if(forCustomer) return `Hi ${f.name.split(" ")[0]},\n\nThank you for choosing Admiralty Brass Co. Your order request ${id} is with our team, and we truly appreciate your support of our artisans in Moradabad.\n\nYour order\n${lines.join("\n")}\n\nCost breakdown\n${cost}${occ}\n\nShip to\n${ship}\n\nWhat happens next: we'll check your order and email your invoice. Once it's paid, your order ships from Ontario by Canada Post. Questions? Reply to this email or write to ${mail("support")} and quote ${id}.\n\nWith thanks,\nAdmiralty Brass Co.`;
-  return `Order request ${id}${occ}\n\n${lines.join("\n")}\n\nCost breakdown\n${cost}\n\nShip to:\n${ship}\n\nEmail: ${f.email}\nPhone: ${f.phone || "-"}\nNotes: ${f.note || "-"}`;
+  return `Order request ${id}${occ}\n\n${lines.join("\n")}\n\nCost breakdown\n${cost}\n\nShip to:\n${ship}\n\nBilling: ${f.sameBill ? "same as shipping" : [f.bill.name, f.bill.addr, f.bill.city + (f.bill.prov ? ", " + f.bill.prov : "") + " " + f.bill.post, f.bill.country].join(", ")}\nEmail: ${f.email}\nPhone: ${f.phone || "-"}\nNotes: ${f.note || "-"}`;
 }
 async function sendCustomer(to, subject, text){
   if(!SITE.confirmEndpoint) return false;
@@ -716,6 +747,8 @@ async function sendToTeam(payload){
 function collect(){
   const v = id => $(id).value.trim();
   const f = {name:v("#fName"), email:v("#fEmail"), phone:v("#fPhone"), addr:v("#fAddr"), city:v("#fCity"), prov:v("#fProv"), post:v("#fPost"), country:v("#fCountry"), note:v("#fNote"), occ:$("#fOcc").value, occTxt:v("#fOccTxt")};
+  f.sameBill = $("#fSame").checked;
+  f.bill = f.sameBill ? {name:f.name, addr:f.addr, city:f.city, prov:f.prov, post:f.post, country:f.country} : {name:v("#bName"), addr:v("#bAddr"), city:v("#bCity"), prov:v("#bProv"), post:v("#bPost"), country:$("#bCountry").value};
   const bad = [];
   const flag = (inp, err, msg) => { $(inp).setAttribute("aria-invalid", "true"); $(err).textContent = msg; bad.push(inp); };
   ["#fName","#fEmail","#fAddr","#fCity","#fPost"].forEach(i => { $(i).removeAttribute("aria-invalid"); });
@@ -724,6 +757,14 @@ function collect(){
   if(!/^\S+@\S+\.\S+$/.test(f.email)) flag("#fEmail","#eEmail","Enter a valid email so we can send your receipt.");
   if(!f.addr) flag("#fAddr","#eAddr","Enter your street address.");
   if(!f.city) flag("#fCity","#eCity","Enter your city.");
+  ["#bName","#bAddr","#bCity","#bPost"].forEach(i => $(i).removeAttribute("aria-invalid"));
+  ["#eBName","#eBAddr","#eBCity","#eBPost"].forEach(i => $(i).textContent = "");
+  if(!f.sameBill){
+    if(!f.bill.name) flag("#bName","#eBName","Enter the name on the card.");
+    if(!f.bill.addr) flag("#bAddr","#eBAddr","Enter your billing address.");
+    if(!f.bill.city) flag("#bCity","#eBCity","Enter your billing city.");
+    if(!f.bill.post) flag("#bPost","#eBPost","Enter your billing postal or ZIP code.");
+  }
   const q = shipQuote(f.country, f.post, count());
   if(q.err) flag("#fPost","#ePost",q.err);
   $("#fStatus").innerHTML = "";
@@ -743,7 +784,7 @@ async function payNow(){
     if(!r.ok || !d.url) throw new Error(d.error || "failed");
     location.href = d.url;
   }catch(e){
-    btn.disabled = false; btn.textContent = "Pay now by card";
+    btn.disabled = false; btn.textContent = "Place your order and pay";
     $("#fStatus").innerHTML = `<div class="status bad">${esc(e.message && e.message !== "failed" ? e.message : "We couldn't start the payment.")} You can also send an order request and we'll invoice you.</div>`;
   }
 }
