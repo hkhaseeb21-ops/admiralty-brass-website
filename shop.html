@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Admiralty Brass Co. | Handcrafted brass décor</title>
-<meta name="description" content="Handcrafted brass décor and handicrafts, made by artisans in Moradabad, India and shipped from Ontario, Canada.">
-<meta property="og:title" content="Admiralty Brass Co. | Handcrafted brass décor">
-<meta property="og:description" content="Handcrafted brass décor and handicrafts, made by artisans in Moradabad, India and shipped from Ontario, Canada.">
+<title>Shop the collection | Admiralty Brass Co.</title>
+<meta name="description" content="Browse handcrafted solid brass décor and handicrafts, made by artisans in Moradabad and shipped from Ontario, Canada.">
+<meta property="og:title" content="Shop the collection | Admiralty Brass Co.">
+<meta property="og:description" content="Browse handcrafted solid brass décor and handicrafts, made by artisans in Moradabad and shipped from Ontario, Canada.">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%238a5f1c%22/%3E%3Ctext x=%2250%22 y=%2266%22 font-size=%2248%22 font-family=%22Arial,sans-serif%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22%3EAB%3C/text%3E%3C/svg%3E">
@@ -21,7 +21,7 @@
       Admiralty Brass Co.
     </a>
     <nav class="links" aria-label="Main">
-      <a href="shop.html">Shop</a>
+      <a href="shop.html" aria-current="page">Shop</a>
       <a href="about.html">About</a>
       <a class="opt" href="about.html#contact">Contact</a>
       <button class="cartbtn" id="cartOpen" aria-label="Open cart">
@@ -33,53 +33,27 @@
 </header>
 
 <main id="main">
-<section class="hero">
+<section id="collection" class="first">
   <div class="wrap">
-    <h1>Brass décor,<br>made by hand.</h1>
-    <p class="lede">Handcrafted brass décor and handicrafts from the workshops of Moradabad, India. Shipped from Ontario, Canada.</p>
-    <div class="actions">
-      <a class="btn" href="shop.html">Shop the collection</a>
-      <a class="link" href="about.html#craft">See how they're made</a>
+    <div class="head">
+      <h1>The collection.</h1>
+      <p class="lede" id="collLede">Handcrafted pieces in brass.</p>
     </div>
-    <div class="lineup" id="lineup"></div>
+    <div class="filters">
+      <div class="seg" id="seg" role="group" aria-label="Filter the collection"></div>
+    </div>
+    <div class="grid" id="grid"></div>
   </div>
 </section>
 
-<section class="flagship" id="flagship" hidden>
+<section id="gifting" class="fog">
   <div class="wrap">
-    <div class="flag">
-      <div class="txt">
-        <p style="font-size:15px;color:#a1a1a6">Featured</p>
-        <h2 id="flHead"></h2>
-        <p id="flTag"></p>
-        <p class="price" id="flPrice"></p>
-        <div class="actions">
-          <button class="btn" id="flAdd">Add to cart</button>
-          <button class="link" id="flOpen">Details</button>
-        </div>
-      </div>
-      <img id="flagImg" alt="">
+    <div class="head"><h2>Make it personal.</h2><p class="lede">Finishing touches for gifts and corporate orders. Choose them on any piece, in the product details or your cart.</p></div>
+    <div class="dgrid" style="margin-top:0">
+      <div class="dcard"><p class="amt">$5</p><h3>Engraving on wood</h3><p>Your name, message or logo text engraved on a wooden plate that comes with your piece. Up to 40 characters, per piece.</p></div>
+      <div class="dcard"><p class="amt">$5</p><h3>Premium gift packing</h3><p>Your piece arrives in a premium presentation box, ready to give. Per piece, and it pairs well with engraving.</p></div>
+      <div class="dcard"><p class="amt">Bulk</p><h3>Corporate gifting</h3><p>Choose &ldquo;Corporate&rdquo; at checkout and add your company name and PO reference. Ordering for a team? <a href="mailto:sales@admiraltybrassco.com">Contact sales</a>.</p></div>
     </div>
-  </div>
-</section>
-
-<section class="fog">
-  <div class="wrap">
-    <div class="head"><h2>Made the slow way.</h2><p class="lede">Every piece starts as raw brass in the workshops of Moradabad, the city known worldwide as the Brass City.</p></div>
-    <div class="cols">
-      <div><h3>Solid brass</h3><p>Our pieces are worked in solid brass by skilled artisans, so they feel substantial and are made to last for generations.</p></div>
-      <div><h3>Made by hand</h3><p>Cut, shaped, assembled and finished by hand. One artisan, one piece, from start to finish.</p></div>
-      <div><h3>Small batches</h3><p>We build in limited runs and inspect each piece before it ships, so small variations in finish are part of the character.</p></div>
-    </div>
-    <div class="actions more"><a class="link" href="about.html#craft">Read about our craft, ordering and delivery</a></div>
-  </div>
-</section>
-
-<section class="origin">
-  <div class="wrap">
-    <h2>If it arrives damaged, we make it right.</h2>
-    <p class="lede">We replace it or refund you. Questions before you order? We're happy to help.</p>
-    <div class="actions" style="margin-top:26px"><a class="btn" href="shop.html">Shop the collection</a><a class="link" href="about.html#contact">Contact us</a></div>
   </div>
 </section>
 </main>
