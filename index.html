@@ -300,16 +300,15 @@ dt{color:var(--slate)}dd{margin:0}
 
 <section id="ordering">
   <div class="wrap">
-    <div class="head"><h2>How ordering works.</h2><p class="lede">Simple, personal and secure. No payment details are ever entered on this site.</p></div>
+    <div class="head"><h2>How ordering works.</h2><p class="lede">Simple, personal and secure. Card details are only ever entered on Stripe's secure payment page, never on this site.</p></div>
     <div class="steps">
       <div class="step"><h3>Choose your pieces</h3><p>Add anything from the collection to your cart. You can order several pieces at once.</p></div>
-      <div class="step"><h3>Send your order request</h3><p>Enter your shipping details. Your request goes straight to our team.</p></div>
-      <div class="step"><h3>Pay by invoice</h3><p>We email you an invoice with shipping and taxes. Once it's paid, your piece ships from Ontario by Canada Post.</p></div>
+      <div class="step"><h3>Pay by card</h3><p>Enter your shipping details and click Pay now by card. You pay on Stripe's secure page and get a receipt by email. Your order then ships from Ontario by Canada Post.</p></div>
+      <div class="step"><h3>Or pay by invoice</h3><p>Prefer an invoice? Click Send order request instead. Our team will check your order and email you the invoice with delivery and tax details. Your order ships once the invoice is paid.</p></div>
     </div>
     <div id="delivery" style="margin-top:72px">
-      <div class="head" style="margin-bottom:0"><h2>Delivery fees.</h2><p class="lede">Worked out automatically from your postal code, so there are no surprises at the end.</p></div>
-      <div class="rates" id="rateList" aria-label="Delivery fees by destination"></div>
-      <p class="dnote">We ship within Canada and the United States. Every piece we sell weighs under 1 kg. Your delivery fee appears in your order as soon as you enter your address at checkout. Taxes are added on your invoice.</p>
+      <div class="head" style="margin-bottom:0"><h2>Delivery.</h2><p class="lede">Delivery is charged at Canada Post rates.</p></div>
+      <p class="dnote">Your delivery fee is calculated automatically from your postal code at checkout. We ship within Canada and the United States.</p>
     </div>
   </div>
 </section>
@@ -529,7 +528,7 @@ function viewCart(){
       <div class="nm">${money(p.price * c.qty)}</div>
     </div>`; }).join("");
   dFoot.innerHTML = `<div class="sumrow"><span>Subtotal</span><span>${money(subtotal())}</span></div>
-    <p class="note" style="margin:0">Your delivery fee is calculated automatically at checkout from your address. Taxes are added to your invoice. You won't be charged now.</p>
+    <p class="note" style="margin:0">Your delivery fee is calculated automatically at checkout from your address. 13% HST is added at checkout. You won't be charged until you pay.</p>
     <button class="btn block" id="toCheckout">Check out</button>`;
   $("#toCheckout").onclick = () => viewCheckout();
 }
@@ -562,14 +561,19 @@ function viewCheckout(){
   </form>`;
   dFoot.innerHTML = `<div class="sumrow"><span>Subtotal</span><span>${money(subtotal())}</span></div>
     <div class="sumrow"><span>Delivery</span><span id="shipAmt">Enter postal code</span></div>
-    <div class="sumrow" style="font-weight:600"><span>Total before tax</span><span id="totAmt">${money(subtotal())}</span></div>
-    <p class="note" style="margin:0" id="payNote">Taxes are added on the next step. Pay by card now, or send an order request and we'll email you an invoice. No payment is taken until you pay.</p>
+    <div class="sumrow"><span>HST (13%)</span><span id="taxAmt">-</span></div>
+    <div class="sumrow" style="font-weight:600"><span>Total with HST</span><span id="totAmt">${money(subtotal())}</span></div>
+    <p class="note" style="margin:0" id="payNote">Pay by card now. If you prefer an invoice, send an order request and our team will check it and email you the invoice. No payment is taken until you pay.</p>
     <button class="btn block" id="pay" hidden>Pay now by card</button>
     <button class="btn ghost block" id="send">Send order request</button>`;
   const refreshShip = () => {
     const q = shipQuote($("#fCountry").value, $("#fPost").value, count());
     $("#shipAmt").textContent = q.err ? "Enter postal code" : money(q.fee);
-    $("#totAmt").textContent = money(subtotal() + (q.err ? 0 : q.fee));
+    const fee = q.err ? 0 : q.fee, base = subtotal() + fee;
+    const tax = $("#fCountry").value === "Canada" ? Math.round(base * 13) / 100 : 0;
+    const m2 = n => "$" + n.toFixed(2) + " CAD";
+    $("#taxAmt").textContent = q.err ? "-" : (tax ? m2(tax) : "None");
+    $("#totAmt").textContent = m2(base + tax);
     $("#ePost").textContent = ""; $("#fPost").removeAttribute("aria-invalid");
     $("#pay").hidden = !SITE.payEndpoint;
   };
@@ -584,7 +588,7 @@ function viewCheckout(){
 
 function orderText(id, f, q){
   const lines = CART.map(c => { const p = bySku(c.sku); return `${c.qty} x ${p.name} (${p.sku}) - ${money(p.price * c.qty)}`; });
-  return `Order request ${id}\n\n${lines.join("\n")}\n\nSubtotal: ${money(subtotal())}\nDelivery (${q.zone}): ${money(q.fee)}\nTotal before tax: ${money(subtotal() + q.fee)} (taxes to be added on the invoice)\n\nShip to:\n${f.name}\n${f.addr}\n${f.city}${f.prov ? ", " + f.prov : ""} ${f.post}\n${f.country}\n\nEmail: ${f.email}\nPhone: ${f.phone || "-"}\nNotes: ${f.note || "-"}`;
+  return `Order request ${id}\n\n${lines.join("\n")}\n\nSubtotal: ${money(subtotal())}\nDelivery (${q.zone}): ${money(q.fee)}\nTotal before HST: ${money(subtotal() + q.fee)} (13% HST will be added on the invoice)\n\nShip to:\n${f.name}\n${f.addr}\n${f.city}${f.prov ? ", " + f.prov : ""} ${f.post}\n${f.country}\n\nEmail: ${f.email}\nPhone: ${f.phone || "-"}\nNotes: ${f.note || "-"}`;
 }
 async function sendToTeam(payload){
   if(!SITE.web3formsKey) return null;
@@ -648,9 +652,9 @@ function viewDone(){
     <h3>${o.viaEmail ? "Send the email to finish." : "Thank you, " + esc(o.f.name.split(" ")[0]) + "."}</h3>
     <div class="oid">${o.id}</div>
     <p style="margin:0 0 14px;color:var(--slate)">${o.viaEmail ? "Your email app should have opened with your order filled in. Press send and we'll receive it." : "We've received your order request."}</p>
-    <div class="recap">${recap}<br>Subtotal ${money(o.sub)}<br>Delivery ${money(o.ship.fee)}<br><strong>Total before tax ${money(o.total)}</strong> (taxes added on your invoice)</div>
+    <div class="recap">${recap}<br>Subtotal ${money(o.sub)}<br>Delivery ${money(o.ship.fee)}<br>${o.f.country === "Canada" ? "HST (13%) $" + (Math.round(o.total * 13) / 100).toFixed(2) + " CAD<br><strong>Total with HST $" + (Math.round(o.total * 113) / 100).toFixed(2) + " CAD</strong>" : "<strong>Total " + money(o.total) + "</strong>"}</div>
     <p style="margin:0"><strong>What happens next</strong></p>
-    <ul><li>We email an invoice to ${esc(o.f.email)} with shipping and taxes.</li><li>Once it's paid, your order ships from Ontario by Canada Post.</li><li>Questions? Email <a href="mailto:${mail("support")}">${mail("support")}</a> and quote ${o.id}.</li></ul>
+    <ul><li>Our team will check your order and email an invoice to ${esc(o.f.email)} with delivery and 13% HST.</li><li>Once it's paid, your order ships from Ontario by Canada Post.</li><li>Questions? Email <a href="mailto:${mail("support")}">${mail("support")}</a> and quote ${o.id}.</li></ul>
   </div>`;
   dFoot.innerHTML = (o.viaEmail ? `<a class="btn block" href="mailto:${mail("orders")}?subject=${encodeURIComponent("Order request " + o.id)}&body=${encodeURIComponent(o.text)}">Open the email again</a>` : "") + `<button class="btn ${o.viaEmail ? "ghost " : ""}block" id="cont">Continue shopping</button>`;
   $("#cont").onclick = () => drawer.close();
@@ -663,7 +667,6 @@ if(/[?&]paid=1/.test(location.search)){
   $("#cont").onclick = () => drawer.close();
   drawer.showModal();
 }
-$("#rateList").innerHTML = Object.values(SHIP.zones).map(z => `<div><span>${esc(z.name)}</span><span>${money(z.fee)}</span></div>`).join("") + `<div><span>Each additional piece in the same order</span><span>+ ${money(SHIP.extraPerPiece)}</span></div>`;
 refreshBadge();
 </script>
 </body>
