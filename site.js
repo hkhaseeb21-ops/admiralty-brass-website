@@ -198,7 +198,8 @@ function openQV(sku){
   $("#qvKind").textContent = qvP.kind; $("#qvName").textContent = qvP.name; $("#qvTag").textContent = qvP.tag;
   $("#qvFeat").innerHTML = qvP.features.map(f => "<li>" + esc(f) + "</li>").join("");
   $("#qvPrice").textContent = money(qvP.price); $("#qvQty").textContent = 1;
-  $("#qvSpec").innerHTML = [["Finish",qvP.finish],["Material",qvP.material||"Solid brass"],["Base",qvP.base],["Ideal for",qvP.ideal],["Item number",qvP.sku]]
+  $("#qvSpec").innerHTML = [["Finish",qvP.finish],["Material",qvP.material||"Solid brass"],["Base",qvP.base],["Size (L x W x H)",qvP.dims ? qvP.dims.l + " x " + qvP.dims.w + " x " + qvP.dims.h + " cm" : ""],["Ideal for",qvP.ideal],["Item number",qvP.sku]]
+    .filter(r => r[1])
     .map(r => `<div><dt>${r[0]}</dt><dd>${esc(r[1])}</dd></div>`).join("");
   qv.querySelector("details").open = false;
   $("#qvMsg").innerHTML = "";
