@@ -3,6 +3,7 @@ document.body.insertAdjacentHTML("beforeend", `
 <dialog id="qv" aria-labelledby="qvName">
   <button class="x" id="qvClose" aria-label="Close details">&times;</button>
   <div class="qvg">
+    <div class="qvt" id="qvThumbs"></div>
     <img id="qvImg" alt="">
     <div class="qvb">
       <p class="kind" id="qvKind"></p>
@@ -28,6 +29,14 @@ document.body.insertAdjacentHTML("beforeend", `
   <div class="df" id="dFoot"></div>
 </dialog>
 `);
+document.head.insertAdjacentHTML("beforeend", `<style>
+#qv .qvg{position:relative}
+#qv .qvt{position:absolute;top:14px;left:14px;z-index:2;display:flex;flex-direction:column;gap:6px}
+#qv .qvt:empty{display:none}
+#qv .qvt button{width:42px;height:56px;padding:0;border:2px solid rgba(255,255,255,.55);border-radius:8px;overflow:hidden;background:#fff;cursor:pointer;opacity:.85}
+#qv .qvt button[aria-current="true"]{border-color:#d4af6a;opacity:1}
+#qv .qvt img{width:100%;height:100%;min-height:0;aspect-ratio:auto;object-fit:cover;display:block;border-radius:0}
+</style>`);
 /* payEndpoint, web3formsKey and domain are set in config.js - edit them there, not here. */
 const SITE = Object.assign({web3formsKey:"", payEndpoint:"", domain:"admiraltybrassco.com", payAddons:false, confirmEndpoint:""}, window.SITE || {});
 const mail = n => n + "@" + SITE.domain;
@@ -195,6 +204,10 @@ const renderQvOpts = () => { $("#qvOpts").innerHTML = optsHTML(QVO, "qv"); };
 function openQV(sku){
   qvP = bySku(sku); qvN = 1; QVO = {engrave:false, engText:"", gift:false}; renderQvOpts();
   $("#qvImg").src = qvP.img; $("#qvImg").alt = qvP.alt;
+  const fitPic = main => { const im = $("#qvImg"); im.style.objectFit = main ? "" : "contain"; im.style.background = main ? "" : "#fff"; }; fitPic(true);
+  const pics = [qvP.img].concat(qvP.imgs || []);
+  $("#qvThumbs").innerHTML = pics.length < 2 ? "" : pics.map((src, i) => `<button type="button" data-src="${esc(src)}" aria-label="Photo ${i + 1} of ${pics.length}" ${i === 0 ? 'aria-current="true"' : ""}><img src="${esc(src)}" alt=""></button>`).join("");
+  $("#qvThumbs").onclick = e => { const b = e.target.closest("button"); if(!b) return; $("#qvImg").src = b.dataset.src; fitPic(b.dataset.src === qvP.img); $("#qvThumbs").querySelectorAll("button").forEach(x => x.removeAttribute("aria-current")); b.setAttribute("aria-current", "true"); };
   $("#qvKind").textContent = qvP.kind; $("#qvName").textContent = qvP.name; $("#qvTag").textContent = qvP.tag;
   $("#qvFeat").innerHTML = qvP.features.map(f => "<li>" + esc(f) + "</li>").join("");
   $("#qvPrice").textContent = money(qvP.price); $("#qvQty").textContent = 1;
